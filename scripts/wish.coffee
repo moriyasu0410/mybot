@@ -15,30 +15,44 @@ module.exports = (robot) ->
   get = () ->
     return robot.brain.get KEY
 
-  add = (object, number) ->
+  add = (object, note) ->
+    now_objects = get()
     objects = {}
-    objects[object] = number
+    for now_object, now_note of now_objects
+      objects[now_object] = now_note
+    objects[object] = note
     robot.brain.set KEY, objects
+    return
+
+  done = (object, note) ->
+    now_objects = get()
+    delete now_objects[object]
+    # objects = {}
+    # for now_object, now_number of now_objects
+    #   objects[now_object] = now_number
+    # objects[object] = number
+    robot.brain.set KEY, now_objects
+    return
 
   # wish
   robot.respond /wish (.*) (.*) (.*)$/i, (msg) ->
     param = msg.match[1]
     object = msg.match[2]
-    number = msg.match[3]
+    note = msg.match[3]
 
     if param == 'add'
-      msg.send "wishリストに#{object}を#{number}つ、追加します"
-      add(object, number)
+      msg.send "wishリストに#{object}[#{note}]を追加します"
+      add(object, note)
       return
     if param == 'done'
-      msg.send "#{object}を#{number}つ、購入しました"
+      msg.send "#{object}[#{note}]を購入しました"
+      done(object, note)
       return
     if param == 'list'
       msg.send "wishリスト一覧です"
       objects = get()
-      for object, number of objects
-        msg.send "#{object}: #{number}"
-        return
+      for object, note of objects
+        msg.send "#{object} : #{note}"
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
