@@ -37,8 +37,8 @@ module.exports = (robot) ->
       msg.send "wishリスト一覧です"
       objects = get()
       for object, number of objects
-      msg.send "#{object}: #{number}"
-      return
+        msg.send "#{object}: #{number}"
+        return
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
