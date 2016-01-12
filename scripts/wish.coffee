@@ -24,35 +24,31 @@ module.exports = (robot) ->
     robot.brain.set KEY, objects
     return
 
-  done = (object, note) ->
+  done = (object) ->
     now_objects = get()
     delete now_objects[object]
-    # objects = {}
-    # for now_object, now_number of now_objects
-    #   objects[now_object] = now_number
-    # objects[object] = number
     robot.brain.set KEY, now_objects
     return
 
-  # wish
-  robot.respond /wish (.*) (.*) (.*)$/i, (msg) ->
-    param = msg.match[1]
-    object = msg.match[2]
-    note = msg.match[3]
+  # wish list
+  robot.respond /wish list/i, (msg) ->
+    msg.send "wish list"
+    objects = get()
+    for object, note of objects
+      msg.send "#{object} : #{note}"
 
-    if param == 'add'
-      msg.send "wishリストに#{object}[#{note}]を追加します"
-      add(object, note)
-      return
-    if param == 'done'
-      msg.send "#{object}[#{note}]を購入しました"
-      done(object, note)
-      return
-    if param == 'list'
-      msg.send "wishリスト一覧です"
-      objects = get()
-      for object, note of objects
-        msg.send "#{object} : #{note}"
+  # wish add
+  robot.respond /wish add (.*) (.*)$/i, (msg) ->
+    object = msg.match[1]
+    note = msg.match[2]
+    msg.send "wish add #{object} : #{note}"
+    add(object, note)
+
+  # wish done
+  robot.respond /wish done (.*)$/i, (msg) ->
+    object = msg.match[1]
+    msg.send "wish done #{object}"
+    done(object)
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
