@@ -41,13 +41,13 @@ module.exports = (robot) ->
   robot.respond /wish add (.*) (.*)$/i, (msg) ->
     object = msg.match[1]
     note = msg.match[2]
-    msg.send "wish add #{object} : #{note}"
     add(object, note)
+    msg.send "wish add #{object} : #{note}."
 
   # wish done
   robot.respond /wish done (.*)$/i, (msg) ->
     object = msg.match[1]
-    msg.send "wish done #{object}"
+    msg.send "wish done #{object}."
     done(object)
 
   # robot.hear /badger/i, (res) ->
